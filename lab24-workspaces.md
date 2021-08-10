@@ -1,4 +1,4 @@
-# Lab 23: Terraform Enterprise - Workspaces
+# Lab: Terraform Enterprise - Workspaces
 
 ## Expected Outcome
 

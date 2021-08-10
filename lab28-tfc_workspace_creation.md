@@ -1,4 +1,4 @@
-# Lab 28: Automate TFC/TFE Workspace Creation
+# Lab: Automate TFC/TFE Workspace Creation
 
 Duration: 15 minutes
 

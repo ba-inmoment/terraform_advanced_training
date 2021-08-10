@@ -132,7 +132,18 @@ The workspace name is arbitrary, since Terraform Cloud creates workspaces on dem
 Run `terraform init`.
 
 ```shell
-> terraform init
+terraform init
+Initializing modules...
+
+Initializing the backend...
+Do you want to copy existing state to the new backend?
+  Pre-existing state was found while migrating the previous "local" backend to the
+  newly configured "remote" backend. No existing state was found in the newly
+  configured "remote" backend. Do you want to copy this state to the new "remote"
+  backend? Enter "yes" to copy and "no" to start with an empty state.
+
+  Enter a value: yes
+  
 Initializing modules...
 
 Initializing the backend...

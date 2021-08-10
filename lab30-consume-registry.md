@@ -1,4 +1,4 @@
-# Lab 27: Private Module Registry
+# Lab: Private Module Registry
 
 Duration: 20 minutes
 
@@ -14,7 +14,7 @@ For this lab, we'll assume that you've installed [Terraform](https://www.terrafo
 
 The Terraform Cloud module configuration designer supports a producer/consumer pattern where some teams create modules and other teams use them to create infrastructure. You'll use the configuration designer to generate code that can be copy-and-pasted into a new Terraform project.
 
-### Step 27.1.1: Launch the configuration designer
+### Step 30.1.1: Launch the configuration designer
 
 Start by either clicking the "Open in Configuration Designer" button under the right hand code snippet, or go back to the organization dashboard and click the "+ Design Configuration" button.
 
@@ -22,7 +22,7 @@ Start by either clicking the "Open in Configuration Designer" button under the r
 
 In either case, you'll see a screen with a list of modules. Click the "Add Module" button on the `animal` module.
 
-### Step 27.1.2: Configure variables
+### Step 30.1.2: Configure variables
 
 Click the green "Next" button to proceed to the configuration screen. You'll see a list of variables, a description of each, and an input field where you can type a value for the variable.
 
