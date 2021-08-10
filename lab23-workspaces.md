@@ -1,4 +1,4 @@
-# Terraform Enterprise - Workspaces
+# Lab 23: Terraform Enterprise - Workspaces
 
 ## Expected Outcome
 
@@ -12,11 +12,16 @@ Login to github and create a new repository by navigating to <https://github.com
 
 Use the following settings:
 - `name` = "server-build"
-- Public repo
+- Private repo
 - Check "Initialize this repository with a README"
 - Add `.gitignore` of type "Terraform"
 
 Once created, clone the repository to your local machine.
+
+```
+sudo git clone https://github.com/<YOUR_GIT_HUB_ACCOUNT>/server-build.git
+cd server-build
+```
 
 ### [Local] Update your Repository
 
@@ -25,9 +30,9 @@ In your repository copy the `main.tf` file from your default module along with t
 Commit the changes in GitHub.
 
 ```
-git add .
-git commit -m "update with terraform code"
-git push
+sudo git add .
+sudo git commit -m "update with terraform code"
+sudo git push
 ```
 
 > **WARNING** :

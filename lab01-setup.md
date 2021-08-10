@@ -4,7 +4,7 @@ Duration: 20 minutes
 
 - Task 1: Connect to the Student Workstation
 - Task 2: Verify Terraform installation
-- Task 3: Generate the first Terraform Configuration
+- Task 3: Generate your first Terraform Configuration
 - Task 4: Use the Terraform CLI to Get Help
 - Task 5: Apply and Update your Configuration
 

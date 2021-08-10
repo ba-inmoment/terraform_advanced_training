@@ -1,4 +1,4 @@
-# Lab: Migrate Variables to Terraform Enterprise
+# Lab 15: Migrate Variables to Terraform Enterprise
 
 Duration: 15 minutes
 
@@ -16,7 +16,7 @@ For this lab, we'll assume that you've installed [Terraform](https://www.terrafo
 
 Now that we have our state stored in Terraform Cloud in our `server-build` workspace, we will take the next logical step and store our sensitive variables into TFC as well.
 
-### Step 1.1.1:
+### Step 15.1.1:
 Update the `main.tf` of the local project connected to our `server-build` workspace to utilize variable and store them in TFC.  Add the following `variable` blocks to your `main.tf`.
 
 ```hcl
@@ -51,7 +51,7 @@ module "server" {
 }
 ```
 
-### Step 1.1.2
+### Step 15.1.2
 
 Set and define your variable values in the Variables section of the `server-build` workspace of Terraform Cloud.
 
@@ -91,11 +91,11 @@ configuration and real physical resources that exist. As a result, no
 actions need to be performed.
 ```
 
-### Step 1.1.3
+### Step 15.1.3
 After confirming a zero change plan, clean up the comments in your `main.tf` the reference the `Don't Delete these until instructed to`.
 
 Modify the server count by changing the `server_count` variable in TFC and running a `terraform apply`.
 
-### Step 1.1.4
+### Step 15.1.4
 
 Congratulations! You're now storing your variable definitions remotely and can control the behavior of your Terraform code by adjusting their values. With Terraform Cloud you are able to centralize and secure the variable definintions for your workspace.

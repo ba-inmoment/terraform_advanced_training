@@ -2,7 +2,9 @@
 
 Duration: 15 minutes
 
-So far, we've already used the count meta-argument to provision multiple copies of the same resource.  The count argument does however have a few limitations in that it is entirely dependent on the count index which can be shown by performing a `terraform state list`.
+So far, we've already used arguments to configure your resources. These arguments are used by the provider to specify things like the AMI to use, and the type of instance to provision. Terraform also supports a number of _Meta-Arguments_, which changes the way Terraform configures the resources. For instance, it's not uncommon to provision multiple copies of the same resource. We can do that with the _count_ argument.
+
+The count argument does however have a few limitations in that it is entirely dependent on the count index which can be shown by performing a `terraform state list`.
 
 A more mature approach to create multiple instances while keeping code DRY is to leverage Terraform's `for-each`.
 
@@ -16,7 +18,7 @@ A more mature approach to create multiple instances while keeping code DRY is to
 
 ## Task 1: Change the number of AWS instances with `count`
 
-Create a new directory for the lab and add the following `main.tf`.  Also copy your `terraform.tfvars` to this diretory.
+Create a new directory for the lab and add the following `main.tf`.  Also copy your `terraform.tfvars` to this directory.
 
 Notice the count is set to `2` for the number of `aws_instances`.
 
@@ -93,7 +95,7 @@ You will see that when using the `count` parameter you have very limited control
 
 
 ## Task 4: Refactor code to use Terraform `for-each`
-Refactor `main.tf` to make use of the `for-each` command rather then the count command.  Replace the existing code in your `main.tf` with the following and fill in the necessary `"<VALUE>"` items as appropriate.
+Refactor `main.tf` to make use of the `for-each` command rather then the count command.  Replace the existing code in your `main.tf` with the following:
 
 ```hcl
 variable "identity" {
@@ -110,18 +112,18 @@ variable "servers" {
   type        = map(any)
   default = {
     server-iis = {
-      ami                    = "<AMI>"
+      ami                    = "ami-07f5c641c23596eb9"
       instance_type          = "t2.micro",
       environment            = "dev"
-      subnet_id              = "<SUBNET ID>"
-      vpc_security_group_ids = ["<SECURITY GROUP ID>"]
+      subnet_id              = "subnet-031bf0c9a309fcd8d"
+      vpc_security_group_ids = ["sg-01380b40dc19ad166"]
     },
     server-apache = {
-      ami                    = "<AMI>"
+      ami                    = "ami-07f5c641c23596eb9"
       instance_type          = "t2.nano",
       environment            = "test"
-      subnet_id              = "<SUBNET ID>" 
-      vpc_security_group_ids = ["<SECURITY GROUP ID>"]
+      subnet_id              = "subnet-031bf0c9a309fcd8d"
+      vpc_security_group_ids = ["sg-01380b40dc19ad166"]
     }
   }
 }

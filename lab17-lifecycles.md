@@ -1,4 +1,4 @@
-# Lab: Lifecycles
+# Lab 17: Lifecycles
 
 Duration: 15 minutes
 
@@ -13,21 +13,21 @@ You'll create a simple AWS configuration with a security group and an associated
 
 You'll solve this situation by using `create_before_destroy` to create the new security group before destroying the original one.
 
-### Step 1.1.1: Create a security group and an instance
+### Step 17.1.1: Create a security group and an instance
 
 Start by creating a new directory and `main.tf` to house the new configuration.
 
 ```shell
-mkdir /workstation/terraform/lab_6_lifecycle_demo && cd $_
+mkdir /workstation/terraform/lab_lifecycle_demo && cd $_
 ```
 
 ```shell
 touch main.tf
 touch variables.tf
-touch main.tf
+touch outputs.tf
 ```
 
-Create an S3 security group and an instance that uses it.
+Create an S3 security group and an instance that uses it inside the `main.tf` file.
 
 ```bash
 provider "aws" {
@@ -63,17 +63,8 @@ resource "aws_instance" "web" {
 }
 ```
 
-Provision these resources.
+Update `outputs.tf` file
 
-```shell
-terraform init
-```
-
-```shell
-terraform apply -auto-approve
-```
-
-Update outputs.tf file
 ```hcl
 output "security_group_name" {
   value = aws_security_group.training.name
@@ -92,7 +83,7 @@ output "web_server_id" {
 }
 ```
 
-Update variables.tf file
+Update `variables.tf` file
 ```hcl
 variable region {
   default     = "us-east-1"
@@ -100,9 +91,19 @@ variable region {
 }
 ```
 
+Provision these resources.
+
+```shell
+terraform init
+```
+
+```shell
+terraform apply -auto-approve
+```
+
 The commands should succeed without error.
 
-### Step 1.1.2: Change the name of the security group
+### Step 17.1.2: Change the name of the security group
 
 In order to see how some resources cannot be recreated under the default `lifecyle` settings, change the name of the security group from `demo` to something like `demo-modified`.
 
@@ -141,7 +142,7 @@ Error: Error applying plan:
 
 In the next step, we'll solve this problem with a `lifecycle` directive.
 
-### Step 1.1.3: Use `create_before_destroy`
+### Step 17.1.3: Use `create_before_destroy`
 
 Add a `lifecycle` configuration to the `aws_security_group` resource. Specify that this resource should be created before the existing security group is destroyed.
 
@@ -169,7 +170,7 @@ It should succeed within a short amount of time.
 
 We'll demonstrate how `prevent_destroy` can be used to guard an instance from being destroyed.
 
-### Step 1.2.1: Use `prevent_destroy`
+### Step 15.2.1: Use `prevent_destroy`
 
 Add `prevent_destroy = true` to the same `lifecycle` stanza where you added `create_before_destroy`.
 
@@ -204,7 +205,7 @@ continue with the plan, either disable lifecycle.prevent_destroy or reduce the
 scope of the plan using the -target flag.
 ```
 
-### Step 1.2.2: Destroy cleanly
+### Step 17.2.2: Destroy cleanly
 
 Now that you have finished the steps in this lab, destroy the infrastructure you have created.
 

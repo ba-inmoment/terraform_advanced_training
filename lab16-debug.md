@@ -1,4 +1,4 @@
-# Lab: Debugging Terraform
+# Lab 16: Debugging Terraform
 
 Duration: 15 minutes
 
@@ -6,7 +6,7 @@ Duration: 15 minutes
 
 ## Task 1: Enable Logging
 
-### Step 1.1.1
+### Step 16.1.1
 
 Terraform has detailed logs which can be enabled by setting the TF_LOG environment variable to any value. This will cause detailed logs to appear on stderr.
 
@@ -29,11 +29,6 @@ Run Terraform Apply.
 > terraform apply
 ```
 
-Terraform Enterprise UI
-
-![](img/debug.png)
-
-Run Terraform Apply.
 
 Example Output
 
@@ -56,7 +51,7 @@ Example Output
 2020/03/20 13:14:41 [TRACE] Executing graph transform *terraform.DiffTransformer
 ```
 
-### Step 1.1.2
+### Step 16.1.2
 
 To persist logged output you can set TF_LOG_PATH in order to force the log to always be appended to a specific file when logging is enabled. Note that even when TF_LOG_PATH is set, TF_LOG must be set in order for any logging to be enabled.
 
@@ -74,12 +69,6 @@ Run Terraform Apply.
 ```shell
 > terraform apply
 ```
-
-Terraform Enterprise UI
-
-![](img/debug_log.png)
-
-Run Terraform Apply.
 
 Open the `terraform_log.txt` to see the contents of the debug trace for your terraform apply.  Experiment with removing the provider stanza within your Terraform configuration and run a `terraform plan` to debug how Terraform searches for where a provider is located.
 

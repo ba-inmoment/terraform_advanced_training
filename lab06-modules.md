@@ -1,4 +1,4 @@
-# Lab: Modules
+# Lab 6: Modules
 
 Duration: 20 minutes
 
@@ -14,11 +14,11 @@ A Terraform module is just a set of configuration. For this lab, we'll refactor
 your existing configuration so that the webserver configuration is inside a
 module.
 
-### Step 1.1.1
+### Step 6.1.1
 
 Create a new directory called `server` in your `/workspace/terraform` directory and create a new file inside of it called `server.tf`.
 
-### Step 1.1.2
+### Step 6.1.2
 
 Edit the file `server/server.tf`, with the following contents:
 
@@ -52,7 +52,7 @@ output "public_dns" {
 }
 ```
 
-### Step 1.1.3
+### Step 6.1.3
 
 In your root configuration (also called your root module) `/workspace/terraform/main.tf`, we can remove the previous references to your configuration and refactor them as a module.
 
@@ -66,15 +66,14 @@ In your root configuration (also called your root module) `/workspace/terraform/
 module "server" {
   source = "./server"
 
-  ami                    = "<AMI>"
-  subnet_id              = "<SUBNET>"
-  vpc_security_group_ids = ["<SECURITY_GROUP>"]
-  identity               = "<IDENTITY>"
+  ami                    = var.ami
+  subnet_id              = var.subnet_id
+  vpc_security_group_ids = var.vpc_security_group_ids
+  identity               = var.identity
 }
 ```
 
-Our outputs should be defined in the root module as well. At the bottom of your
-`main.tf` configuration, modify the public IP and public DNS outputs to match
+Our outputs should now be defined in their own file `outputs.tf` on the same file level as the root module. At the bottom of your root `output.tf` configuration, modify the public IP and public DNS outputs to match
 the following. Notice the difference in interpolation now that the information
 is being delivered by a module.
 
@@ -88,21 +87,11 @@ output "public_dns" {
 }
 ```
 
-### Step 1.1.4
-Confirm your instance via a `terraform state list` command
+### Step 6.1.4
 
-```bash
-terraform state list
-```
-
-```bash
-terraform state list
-aws_instance.web
-```
-
-### Step 1.1.5
-
-Now run `terraform init` to install the module.
+Now run `terraform get` or `terraform init` to install the module. Since we're
+just adding a module and no providers, `get` is sufficient, but `init` is safe
+to use too. Even local modules need to be installed before they can be used.
 
 Once you've done that, you can run `terraform apply` again. Notice that the the
 instance will be recreated, and its id changed, but everything else should
@@ -125,21 +114,9 @@ terraform apply
 ...
 ```
 
-### Step 1.1.6
-Confirm your instance via a `terraform state list` command
-
-```bash
-terraform state list
-```
-
-```bash
-terraform state list
-module.server.aws_instance.web
-```
-
 ## Task 2: Explore the Public Module Registry
 
-### Step 1.2.1
+### Step 6.2.1
 
 HashiCorp hosts a public module registry at: https://registry.terraform.io/
 
@@ -147,13 +124,13 @@ The registry contains a large set of community-contributed modules that you can
 use in your own configurations. Explore the registry to see what is available to
 you.
 
-### Step 1.2.2
+### Step 6.2.2
 
 Search for "dynamic-keys" in the public registry and uncheck the "Verified" checkbox. You should then see a module called "dynamic-keys" created by one of HashiCorp's founders, Mitchell Hashimoto. Alternatively, you can navigate directly to https://registry.terraform.io/modules/mitchellh/dynamic-keys/aws/2.0.0.
 
 Select this module and read the content on the Readme, Inputs, Outputs, and Resources tabs. This module will generate a public and private key pair so you can SSH into your instance.
 
-### Step 1.2.3
+### Step 6.2.3
 
 To integrate this module into your configuration, add this after your provider
 block in `main.tf`:
@@ -163,7 +140,7 @@ module "keypair" {
   source  = "mitchellh/dynamic-keys/aws"
   version = "2.0.0"
   path    = "${path.root}/keys"
-  name    = "<IDENTITY>-key"
+  name    = "${var.identity}-key"
 }
 ```
 
@@ -173,24 +150,10 @@ Now you're referring to the module, but Terraform will need to download the
 module source before using it. Run the command `terraform init` to download it.
 
 To provision the resources defined by the module, run `terraform apply`, and
-answer `yes` to the confirmation prompt and confirm your instance via a `terraform state list` command
+answer `yes` to the confirmation prompt.
 
-```bash
-terraform state list
-```
 
-```bash
-terraform state list
-
-module.keypair.aws_key_pair.generated
-module.keypair.local_file.private_key_pem[0]
-module.keypair.local_file.public_key_openssh[0]
-module.keypair.null_resource.chmod[0]
-module.keypair.tls_private_key.generated
-module.server.aws_instance.web
-```
-
-### Step 1.2.4
+### Step 6.2.4
 
 Now we'll use the _keypair_ module to install a public key on our server. In `main.tf`, add the necessary output from our key module to our server module:
 
@@ -207,7 +170,7 @@ module "server" {
 }
 ```
 
-### Step 1.2.5
+### Step 6.2.5
 
 In your `server/server.tf` file, add two new variables to the rest of the variables at the top of the file:
 
@@ -233,10 +196,14 @@ resource "aws_instance" "web" {
 
 We'll use the private_key variable later.
 
+### File structure diagram
+Modules can be a bit daunting at first.  We are suddenly working with a number of files in different file hierarchies, and those files are referencing each other in a few different ways.  This diagram is a general overview of how the files interact with each other, and how variables and outputs are defined and declared between root modules and child modules.
+
+![](img/fileStructure-4.png)
 
 ## Task 3: Refresh and rerun your Terraform configuration
 
-### Step 1.3.1
+### Step 6.3.1
 
 Rerun `terraform apply` to delete the original instance and recreate it once
 again. Now the public key will be installed on the new instance.
