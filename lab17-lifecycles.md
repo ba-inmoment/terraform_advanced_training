@@ -190,7 +190,7 @@ resource "aws_security_group" "training" {
 Attempt to destroy the existing infrastructure. You should see the error that follows.
 
 ```shell
-terraform destroy -force
+terraform destroy
 ```
 
 ```
@@ -228,7 +228,7 @@ resource "aws_security_group" "training" {
 Finally, run `destroy`.
 
 ```shell
-terraform destroy -force
+terraform destroy
 ```
 
 The command should succeed and you should see a message confirming `Destroy complete! Resources: 2 destroyed.`

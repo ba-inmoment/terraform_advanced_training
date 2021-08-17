@@ -150,6 +150,8 @@ resource "aws_instance" "web" {
 }
 ```
 
+Update the `subnet_id`, `ami`, and `vpc_security_group_ids` within the `servers` variable above to reflect your lab appropriate settings as shown in the `terraform.tfvars` file.
+
 If you run `terraform apply` now, you'll notice that this code will destroy the previous resource and create two new servers based on the attributes defined inside the `servers` variable, which is defined as a map of our servers.
 
 
