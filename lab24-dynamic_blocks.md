@@ -50,6 +50,7 @@ aws_security_group.main
 ```
 
 ## Task 3: Convert Security Group to use dynamic block
+Replace the contents of `main.tf` with the following configuration:
 
 ```hcl
 locals {
@@ -85,6 +86,7 @@ resource "aws_security_group" "main" {
 Run a `terraform apply` followed by a `terraform state list` to view how the servers are accounted for in Terraform's State.
 
 ```bash
+terraform apply
 terraform state list
 ```
 
@@ -93,6 +95,7 @@ aws_security_group.main
 ```
 
 ## Task 5: Use a dynamic block with Terraform map
+Replace the contents of `main.tf` with the following configuration:
 
 ```hcl
 variable "web_ingress" {
