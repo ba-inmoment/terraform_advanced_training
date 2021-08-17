@@ -98,13 +98,14 @@ You will see that when using the `count` parameter you have very limited control
 Refactor `main.tf` to make use of the `for-each` command rather then the count command.  Replace the existing code in your `main.tf` with the following:
 
 ```hcl
-variable "identity" {
-  default = "rpt"
+variable "access_key" {}
+variable "secret_key" {}
+variable "region" {
+  default = "us-east-1"
 }
 
-variable "aws_region" {
-  description = "AWS region"
-  default     = "us-east-1"
+variable "identity" {
+  default = "rpt"
 }
 
 variable "servers" {
@@ -129,7 +130,9 @@ variable "servers" {
 }
 
 provider "aws" {
-  region = var.aws_region
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region = var.region
 }
 
 resource "aws_instance" "web" {

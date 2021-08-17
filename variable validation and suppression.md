@@ -10,7 +10,7 @@ We may want to validate and possibly suppress and sensitive information defined 
 
 ## Task 1: Valdiate variables in a configuration block
 
-Add three variables at the top of your configuration file:
+Create a new folder called `variable_validation` with a `variables.tf` configuration file:
 
 ```hcl
 variable "cloud" {
@@ -30,18 +30,16 @@ variable "cloud" {
 
 Perform a `terraform init` and `terraform plan`.  Provide inputs that both meet and do not meet the validation conditions to see the behavior.
 
+```bash
+terraform plan -var cloud=aws
+terraform plan -var cloud=alibabba
+```
+
 ## Task 2: More Validation Options
 
-Add the following items to the `main.tf`
+Add the following items to the `variables.tf`
 
 ```hcl
-
-variable "character_limit" {
-  default = 3
-  type = number
-  description = "character limit for a variable"
-}
-
 variable "no_caps" {
     type = string
 
@@ -56,7 +54,7 @@ variable "character_limit" {
     type = string
 
     validation {
-        condition = length(var.character_limit) >= 3
+        condition = length(var.character_limit) == 3
         error_message = "."
     }
 }
@@ -70,8 +68,15 @@ variable "ip_address" {
         error_message = "Must be an IP address of the form X.X.X.X."
     }
 }
+```
 
+```bash
+terraform plan -var cloud=aws -var no_caps -var ip_address=1.1.1.1 -var character_limit=gabe
 
+terraform plan -var cloud=all -var "no_caps=Gabe" -var "ip_address=1223.22.342.22" -var "character_limit=ga"
+```
+
+```hcl
 module "default_variable" {
     source = "./my_module"
     my_str = var.no_caps
