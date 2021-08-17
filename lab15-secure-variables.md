@@ -4,57 +4,23 @@ Duration: 15 minutes
 
 This lab demonstrates how to store variables to Terraform Enterprise.
 
-- Task 1: Create a Terraform Cloud user token
-- Task 2: Create a configuration which stores its state on Terraform Cloud
-- Task 3: Create another Terraform config that reads from the state on Terraform Cloud
-
+- Task 1: Update Terraform Code to use variables and store them within Terraform Cloud
+- Task 2: Validate Variable Migration was successful
+  
 ## Prerequisites
 
 For this lab, we'll assume that you've installed [Terraform](https://www.terraform.io/downloads.html) and that you have [signed up](https://app.terraform.io/signup/account) for a Terraform Cloud account and have completed the `remote-state` and `read-state` labs.
 
-## Task: Update Terraform Code to use variables and store them within Terraform Cloud.
+## Task 1: Update Terraform Code to use variables and store them within Terraform Cloud
 
-Now that we have our state stored in Terraform Cloud in our `server-build` workspace, we will take the next logical step and store our sensitive variables into TFC as well.
+Now that we have our state stored in Terraform Cloud in our `server` workspace, we will take the next logical step and store our sensitive variables into TFC as well.
 
-### Step 15.1.1:
-Update the `main.tf` of the local project connected to our `server-build` workspace to utilize variable and store them in TFC.  Add the following `variable` blocks to your `main.tf`.
 
-```hcl
-variable "region" {
-  default = "us-east-1"
-}
-variable "subnet_id" {}
-variable "identity" {}
-variable "vpc_security_group_ids" {
-  type = list
-}
-variable "server_count" {
-  type = number
-}
-```
+### Step 15.1.1
 
-Update you `main.tf` to utilize the variables you have declared in the variable blocks above.
+Set and define your variable values in the Variables section of the `server` workspace of Terraform Cloud.
 
-```hcl
-provider "aws" {
-  region     = var.region
-}
-
-module "server" {
-  source = "./server"
-  count                  = var.server_count
-  subnet_id              = var.subnet_id
-  vpc_security_group_ids = var.vpc_security_group_ids
-  identity               = var.identity
-  key_name               = module.keypair.key_name
-  private_key            = module.keypair.private_key_pem
-}
-```
-
-### Step 15.1.2
-
-Set and define your variable values in the Variables section of the `server-build` workspace of Terraform Cloud.
-
+Rename your `terraform.auto.tfvars` to `terraform.tfvars`
 
 Next reinitialize your terraform project locally and run a `terraform plan` to validate that refactoring your code to make use of variables within TFC did not introduce any planned infrastructure changes.  This can be confirmed by validating a zero change plan.
 
@@ -71,7 +37,7 @@ https://app.terraform.io/app/Enterprise-Cloud/server-build/runs/run-DGXauYrWeB1x
 
 Waiting for the plan to start...
 
-Terraform v0.14.8
+Terraform v1.0.4
 Configuring remote state backend...
 Initializing Terraform configuration...
 module.keypair.tls_private_key.generated: Refreshing state... [id=34a0559a16dc68108d30a76d9a5a7b25f8885e1e]

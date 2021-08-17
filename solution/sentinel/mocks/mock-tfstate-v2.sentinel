@@ -1,0 +1,25 @@
+terraform_version = "0.13.4"
+
+outputs = {}
+
+resources = {
+	"random_pet.petname": {
+		"address":        "random_pet.petname",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "petname",
+		"provider_name":  "registry.terraform.io/hashicorp/random",
+		"tainted":        false,
+		"type":           "random_pet",
+		"values": {
+			"id":        "miserably-blindly-musical-panther",
+			"keepers":   null,
+			"length":    4,
+			"prefix":    null,
+			"separator": "-",
+		},
+	},
+}

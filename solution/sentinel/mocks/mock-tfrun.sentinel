@@ -1,0 +1,42 @@
+id = "run-3joPB6MAN9LDDTz7"
+created_at = "2021-08-17T10:57:22.289Z"
+message = "Triggered via CLI"
+commit_sha = undefined
+speculative = false
+is_destroy = false
+refresh = true
+refresh_only = false
+replace_addrs = null
+target_addrs = null
+
+variables = {
+	"AWS_ACCESS_KEY_ID": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"AWS_SECRET_ACCESS_KEY": {
+		"category":  "env",
+		"sensitive": true,
+	},
+}
+
+organization = {
+	"name": "gabe-lab",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2021-08-16T11:31:22.262Z",
+	"description":       null,
+	"id":                "ws-1jHRR4oF3EvrJtw9",
+	"name":              "sentinel-test-ws",
+	"tags":              [],
+	"vcs_repo":          null,
+	"working_directory": null,
+}
+
+cost_estimate = {
+	"delta_monthly_cost":    "0.0",
+	"prior_monthly_cost":    "0.0",
+	"proposed_monthly_cost": "0.0",
+}

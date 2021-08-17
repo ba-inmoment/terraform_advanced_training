@@ -13,26 +13,35 @@ We may want to validate and possibly suppress and sensitive information defined 
 Add three variables at the top of your configuration file:
 
 ```hcl
-variable "protein" {
+variable "cloud" {
   type = string
 
   validation {
-      condition = contains(["chicken","beef","tofu"],lower(var.protein))
-      error_message = "The protein must be in the approved list of proteins."
+    condition     = contains(["aws", "azure", "gcp", "vmware"], lower(var.cloud))
+    error_message = "You must use an approved cloud."
   }
 
   validation {
-      condition = lower(var.protein) == var.protein
-      error_message = "The protein name must not have capital letters."
+    condition     = lower(var.cloud) == var.cloud
+    error_message = "The cloud name must not have capital letters."
   }
 }
 ```
 
-## Task 3: More Validation Options
+Perform a `terraform init` and `terraform plan`.  Provide inputs that both meet and do not meet the validation conditions to see the behavior.
 
-`main.tf`
+## Task 2: More Validation Options
+
+Add the following items to the `main.tf`
 
 ```hcl
+
+variable "character_limit" {
+  default = 3
+  type = number
+  description = "character limit for a variable"
+}
+
 variable "no_caps" {
     type = string
 
@@ -43,12 +52,12 @@ variable "no_caps" {
 
 }
 
-variable "always_wrong" {
+variable "character_limit" {
     type = string
 
     validation {
-        condition = length(var.always_wrong) == length(var.always_wrong)
-        error_message = "You'll never get this right."
+        condition = length(var.character_limit) >= 3
+        error_message = "."
     }
 }
 
@@ -113,7 +122,7 @@ terraform apply -var no_caps=ALL_CAPS
 terraform apply -var ip_address=10.1.1.
 
 # Uncomment module
-terraform13 apply -var no_caps=morethanthree
+terraform apply -var no_caps=morethanthree
 
 ## Task 3: Suppress sensitive information
 
@@ -153,7 +162,7 @@ locals {
   my_number = nonsensitive(var.phone_number)
 }
 
-#output "phone_number" {
-#  value = var.phone_number
-#}
+output "phone_number" {
+  value = var.phone_number
+}
 ```

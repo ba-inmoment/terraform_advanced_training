@@ -1,0 +1,212 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_s3_bucket": {
+				"dev": {
+					0: {
+						"applied": {
+							"acl":                                  "public-read",
+							"bucket":                               "sentinel-ws-miserably-blindly-musical-panther",
+							"bucket_prefix":                        null,
+							"cors_rule":                            [],
+							"force_destroy":                        true,
+							"grant":                                [],
+							"lifecycle_rule":                       [],
+							"logging":                              [],
+							"object_lock_configuration":            [],
+							"policy":                               "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"PublicReadGetObject\",\n            \"Effect\": \"Allow\",\n            \"Principal\": \"*\",\n            \"Action\": [\n                \"s3:GetObject\"\n            ],\n            \"Resource\": [\n                \"arn:aws:s3:::sentinel-ws-miserably-blindly-musical-panther/*\"\n            ]\n        }\n    ]\n}\n",
+							"replication_configuration":            [],
+							"server_side_encryption_configuration": [],
+							"tags": {
+								"environment": "dev",
+							},
+							"tags_all": {
+								"environment": "dev",
+							},
+							"website": [],
+						},
+						"destroy": false,
+						"diff": {
+							"acceleration_status": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"acl": {
+								"computed": false,
+								"new":      "public-read",
+								"old":      "",
+							},
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"bucket": {
+								"computed": false,
+								"new":      "sentinel-ws-miserably-blindly-musical-panther",
+								"old":      "",
+							},
+							"bucket_domain_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"bucket_prefix": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"bucket_regional_domain_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"cors_rule.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"force_destroy": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"grant.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"hosted_zone_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"lifecycle_rule.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"logging.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"object_lock_configuration.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"policy": {
+								"computed": false,
+								"new":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"PublicReadGetObject\",\n            \"Effect\": \"Allow\",\n            \"Principal\": \"*\",\n            \"Action\": [\n                \"s3:GetObject\"\n            ],\n            \"Resource\": [\n                \"arn:aws:s3:::sentinel-ws-miserably-blindly-musical-panther/*\"\n            ]\n        }\n    ]\n}\n",
+								"old":      "",
+							},
+							"region": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"replication_configuration.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"request_payer": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"server_side_encryption_configuration.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"tags.environment": {
+								"computed": false,
+								"new":      "dev",
+								"old":      "",
+							},
+							"tags_all.%": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"tags_all.environment": {
+								"computed": false,
+								"new":      "dev",
+								"old":      "",
+							},
+							"versioning.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"website.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"website_domain": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"website_endpoint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.13.4"
+
+variables = {}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

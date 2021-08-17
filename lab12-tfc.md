@@ -155,13 +155,9 @@ Initializing provider plugins...
 - Checking for available provider plugins...
 - Downloading plugin for provider "aws" (terraform-providers/aws) 2.18.0...
 
-The following providers do not have any version constraints in configuration,
-so the latest version was installed.
+The following providers do not have any version constraints in configuration, so the latest version was installed.
 
-To prevent automatic upgrades to new major versions that may contain breaking
-changes, it is recommended to add version = "..." constraints to the
-corresponding provider blocks in configuration, with the constraint strings
-suggested below.
+To prevent automatic upgrades to new major versions that may contain breaking changes, it is recommended to add version = "..." constraints to the corresponding provider blocks in configuration, with the constraint strings suggested below.
 
 * provider.aws: version = "~> 2.18"
 
@@ -177,6 +173,8 @@ commands will detect it and remind you to do so if necessary.
 ```
 
 ### Step 12.2.3
+
+Rename your `terraform.tfvars` file to `terraform.auto.tfvars`
 
 Create a new tag and run `terraform apply` and go to the Workspace you created. You should see state information there.
 

@@ -1,4 +1,4 @@
-# Lab 10: Data Source (Optional)
+# Lab 10: Data Source
 
 This is an optional lab that you can perform on your own at the end of the Terraform 101 course if you have time.  It uses the [aws_ami](https://www.terraform.io/docs/providers/aws/d/ami.html) data source to fetch the same AMI that we have been using all along and then makes the aws_instance web use that AMI. You can read about data sources [here](https://www.terraform.io/docs/configuration/data-sources.html). An example of making an aws_instance resource use the AMI returned by an aws_ami data source is in the [aws_instance](https://www.terraform.io/docs/providers/aws/r/instance.html) resource documentation.
 
