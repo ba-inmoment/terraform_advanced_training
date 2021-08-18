@@ -1,4 +1,4 @@
-# Lab: Migrate State to Terraform Enterprise
+# Lab: Migrate State to Terraform Cloud/Enterprise
 
 Duration: 20 minutes
 
