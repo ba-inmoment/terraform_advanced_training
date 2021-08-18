@@ -7,6 +7,7 @@ We may want to validate and possibly suppress and sensitive information defined 
 - Task 1: Valdiate variables in a configuration block
 - Task 2: More Validation Options
 - Task 3: Suppress sensitive information
+- Task 4: View the Terraform State File
 
 ## Task 1: Valdiate variables in a configuration block
 
