@@ -44,7 +44,7 @@ In the `/workstation/terraform/` directory, ensure you have a `terraform.tfvars`
 
 If these values are commented out (they are by default), make sure you uncomment them as our Terraform configuration will be using them.
 
-Create a new folder within the directory called `test`
+Create a new folder within the `server` folder called `test`. This will house your test for the server module.
 
 In the `test` folder, create a file ending in server_test.go and run tests with the go test command. E.g., go test server_test.go.
 
@@ -69,7 +69,7 @@ func TestEnvironment(t *testing.T) {
 	// terraform testing.
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../",
+		TerraformDir: "../../",
 	})
 
 	// defer is like a try finally, where at the end of this test, this line will always run. This line calls a Terraform destroy, which always gets called.
