@@ -81,7 +81,7 @@ func TestEnvironment(t *testing.T) {
 	server_dns := terraform.OutputList(t, terraformOptions, "public_dns")
 	server_ip := terraform.OutputList(t, terraformOptions, "public_ip")
 	
-	//pings the workstations, will fail if they do not ping. The ping will wait for 60 seconds to ensure the ip is ready and can be pinged.
+	//pings the server ips, will fail if they do not ping. The ping will wait for 60 seconds to ensure the ip is ready and can be pinged.
 	
 	for i := 0; i < len(server_ip); i++ {
 		cmd := shell.Command{
@@ -92,7 +92,7 @@ func TestEnvironment(t *testing.T) {
 	}
 
 	for i := 0; i < len(server_dns); i++ {
-		//ensure that you can http get the workstations and the response is 200
+		//ensure that you can http and the response is 200
 		resp, err := http.Get("http://" + server_dns[i])
 		assert.Nil(t, err)
 		defer resp.Body.Close()
