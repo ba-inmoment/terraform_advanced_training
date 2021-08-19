@@ -55,6 +55,7 @@ package test
 
 import (
 	"testing"
+	"fmt"
 	"net/http"
 	"github.com/gruntwork-io/terratest/modules/shell"
 	"github.com/gruntwork-io/terratest/modules/terraform"
@@ -92,10 +93,12 @@ func TestEnvironment(t *testing.T) {
 	}
 
 	for i := 0; i < len(server_dns); i++ {
-		//ensure that you can http and the response is 200
+		//ensure that you can http get the servers and the response is 200
 		resp, err := http.Get("http://" + server_dns[i])
 		assert.Nil(t, err)
 		defer resp.Body.Close()
+		fmt.Print("HTTP request on " + server_dns[i] + " was ")
+		fmt.Println(resp.StatusCode)
 		assert.Equal(t, 200, resp.StatusCode)
 	}
 
