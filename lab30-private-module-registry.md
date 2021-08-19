@@ -81,8 +81,6 @@ variable "vpc_security_group_ids" {
 }
 ```
 
-Update the `source` argument on the module declaration to your TFE hostname and organization.
-
 Commit the file and check the code into github.
 
 ### Create a workspace
@@ -145,6 +143,8 @@ Enter the following into the Environment Variables section:
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - AWS_DEFAULT_REGION
+
+Update the `source` argument on the module declaration to your TFE hostname and organization.
 
 ### Run a Plan
 
