@@ -4,25 +4,25 @@
 
 In this challenge, you will see how you can apply policies using Sentinel Policy-as-Code.
 
-## How to
+## View Policies
 
-### View Policies
+Within Terraform Cloud/Enterprise, click on your organization -> Organization Settings
 
-In the Terraform Enterprise web app, click on your organization -> Organization Settings
-
-<https://TFE_HOSTNAME/YOUR_ORG_NAME/settings/policies>
+<https://app.terraform.io/app/YOUR_ORG_NAME/settings/policies>
 
 ![](img/sentinel-policy-add.png)
 
-### Create Policy Set
+## Create Policy Set
 
-First we need a place to stor our policies, namely a Policy Set.
+First we need a place to store our policies, namely a Policy Set.
 
 On the left menu, click the "Policy set" tab.
 
-Click "Create new policy set"
+Click "Connect a new policy set"
 
 ![](img/sentinel-policyset-add-new.png)
+
+As Sentinel Policies are code they are typically saved to Version Control, so we can select the code repository in our VCS providers in which our Sentinel policies reside.  We are going to add a VCS connection later, so we will select `No VCS Connection` at this time. 
 
 Create the following policy:
 
@@ -34,18 +34,15 @@ __Name:__ GlobalWorkspacePolicies
 
 __Description:__ Global policies.
 
-__Policy Set Source__: Select Upload Via API
-
 __Scope of Policies:__ Select -> "Policies enforced on all workspaces"
 
-__Policies:__ Select the Policy created above -> Click "Add"
+Click "Connect policy set"
 
-
-### Create Policy
+## Create Policy
 
 Now lets create a Policy to enforce governance.
 
-Click "Create new policy"
+Under `Policies` - click "Create new policy"
 
 ![](img/sentinel-policy-add-new.png)
 
@@ -182,13 +179,13 @@ main = rule {
 }
 ```
 
-__Policy Sets__: Select the Policy Set we just created "GlobalWorkspacePolicies". (And be sure to click the add button to the right)
+__Policy Sets__: Select the Policy Set we just created "GlobalWorkspacePolicies". (And be sure to click the add button to the right to `Add policy set`) and then click `Create Policy`
 
 ### Run a Plan
 
 > Note: be sure to discard any existing plans.
 
-Navigate to your "app-web" and queue a plan.
+Navigate to your "server" workspace and queue a plan.
 
 ### Review the Plan
 

@@ -8,6 +8,7 @@ We can Provision Terraform Cloud or Terraform Enterprise - with Terraform! The T
 - Task 2: Create a TFC/TFE Workspace using the tfe provider
 - Task 3: Set Variables within a TFE Workspace
 - Task 4: Update the Terraform Version of a Workspace
+- Task 5: Automate Team Access across Workspaces
 ​
 ## Task 1: Read information from TFC/TFE with the Terraform tfe provider
 ​
@@ -16,28 +17,27 @@ Create a new directory for the lab and add the following `main.tf`.
 ```hcl
 provider "tfe" {
 }
-​
+
 variable "workspace_name" {
   type = string
 }
-​
+
 variable "organization" {
   type = string
 }
-​
+
 data "tfe_workspace" "workspace" {
   name         = var.workspace_name
   organization = var.organization
 }
-​
+
 output "workspace_id" {
   value = data.tfe_workspace.workspace.id
 }
-​
+
 output "workspace_terraform_version" {
   value = data.tfe_workspace.workspace.terraform_version
 }
-​
 ```
 ​
 Export an api token as `export TFE_TOKEN=<TOKEN-VALUE>`
@@ -109,46 +109,44 @@ Workspaces are how Terraform Cloud organizes infrastructure.  Let's create one w
 ```bash
 provider "tfe" {
 }
-​
 variable "workspace_name" {
   type = string
 }
-​
+
 variable "workspace_name_new" {
   type = string
 }
-​
+
 variable "organization" {
   type = string
 }
-​
+
 data "tfe_workspace" "workspace" {
   name         = var.workspace_name
   organization = var.organization
 }
-​
+
 resource "tfe_workspace" "workspace_new" {
   name         = var.workspace_name_new
   organization = var.organization
 }
-​
+
 output "workspace_id" {
   value = data.tfe_workspace.workspace.id
 }
-​
+
 output "workspace_terraform_version" {
   value = data.tfe_workspace.workspace.terraform_version
 }
-​
+
 output "workspace_new_id" {
-  value = data.tfe_workspace.workspace_new.id
+  value = tfe_workspace.workspace_new.id
 }
-​
+
 output "workspace_new_terraform_version" {
-  value = data.tfe_workspace.workspace_new.terraform_version
+  value = tfe_workspace.workspace_new.terraform_version
 }
 ```
-​
 ​
 ```bash
 terraform apply
@@ -187,7 +185,7 @@ resource "tfe_variable" "managed" {
   workspace_id = tfe_workspace.workspace_new.id
   description  = "This an example of a regular variable"
 }
-​
+
 resource "tfe_variable" "sensitive" {
   key          = "my_variable_sensitive"
   value        = "my_sensitive_value"
@@ -196,7 +194,7 @@ resource "tfe_variable" "sensitive" {
   description  = "This an example of an sensitive variable"
   sensitive    = true
 }
-​
+
 resource "tfe_variable" "hcl" {
   key          = "my_variable_hcl"
   value        = "[hcl_variable_value]"
@@ -234,7 +232,6 @@ Update the new tfe_workspace to specify a Terraform version
 variable "tf_version_prod" {
    default = "1.0.0"
 }
-​
 resource "tfe_workspace" "workspace_new" {
   name         = var.workspace_name_new
   organization = var.organization
@@ -298,10 +295,10 @@ Validate the update terraform version of your workspace.
 ​
 ## Task 5: Automate Creation of Production, Development and QA Workspaces
 ​
-Often times we wish to break out our Terraform configuations by the environment with which they reside.  Let's showcase how we can use a dynamic block to automate the build out of our Terraform workspace environments.
-​
-Create a `env.tf`
-​
+Often times we wish to break out our Terraform configuations by the environment with which they reside.  Let's showcase how we can use a dynamic block to automate the build out of our Terraform workspace environments.  Create an `env.tf`
+
+`env.tf`
+
 ```hcl
 variable "apps" {
   description = "Map of applications"
@@ -315,12 +312,12 @@ variable "apps" {
     }
   }
 }
-​
+
 variable "environments" {
   type    = list(any)
   default = ["sandbox", "development", "production"]
 }
-​
+
 locals {
   app_env = flatten([for app_key, app in var.apps : [
     for environment in var.environments : {
@@ -331,7 +328,7 @@ locals {
     ]
   ])
 }
-​
+
 resource "tfe_workspace" "managed" {
   for_each          = { for env in local.app_env : "${env.app}-${env.environment}" => env }
   name              = each.key
@@ -339,11 +336,48 @@ resource "tfe_workspace" "managed" {
   terraform_version = each.value.terraform_version
 }
 ```
+
+Run a `terraform apply`
+
+
+## Task 5: Automate Team Access across Workspaces
+​
+We can also utilize the tfe provider to automate applying team access across a single set of workspaces or accross all workspaces.  Create an `teams.tf`
+
+`teams.tf`
+
+```hcl
+data "tfe_team" "devs" {
+  name         = "devs"
+  organization = var.organization
+}
+
+data "tfe_workspace_ids" "all" {
+  names        = ["*"]
+  organization = var.organization
+}
+
+# resource "tfe_team_access" "devs-individual" {
+#   access       = "read"
+#   team_id      = data.tfe_team.devs.id
+#   workspace_id = tfe_workspace.workspace_new.id
+# }
+
+resource "tfe_team_access" "devs-all" {
+  for_each     = data.tfe_workspace_ids.all.ids
+  access       = "read"
+  team_id      = data.tfe_team.devs.id
+  workspace_id = each.value
+}
+```
+
+Run a `terraform apply`
+
 ​
 ## Best Practices - Planning and Organizing Terraform Workspaces
 ​
-It is recommended that organizations break down large monolithic Terraform configurations into smaller ones, then assign each one to its own workspace and delegate permissions and responsibilities for them. Terraform Cloud can manage monolithic configurations just fine, but managing infrastructure as smaller components is the best way to take full advantage of Terraform Cloud's governance and delegation features.
-​
-For example, the code that manages your production environment's infrastructure could be split into a networking configuration, the main application's configuration, and a monitoring configuration. After splitting the code, you would create "networking-prod", "app1-prod", "monitoring-prod" workspaces, and assign separate teams to manage them.
-​
+It is recommended that organizations break down large monolithic Terraform configurations into smaller ones, then assign each one to its own workspace and delegate permissions and responsibilities for them. Terraform Cloud can manage monolithic configurations just fine, but managing infrastructure as smaller components is the best way to take full advantage of Terraform Cloud's governance and delegation features. 
+
+For example, the code that manages your production environment's infrastructure could be split into a networking configuration, the main application's configuration, and a monitoring configuration. After splitting the code, you would create "networking-prod", "app1-prod", "monitoring-prod" workspaces, and assign separate teams to manage them. 
+
 Much like splitting monolithic applications into smaller microservices, this enables teams to make changes in parallel. In addition, it makes it easier to re-use configurations to manage other environments of infrastructure ("app1-dev," etc.).

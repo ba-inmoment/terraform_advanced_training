@@ -9,6 +9,8 @@ The Terraform Cloud REST API can be used to automate interactions with Terraform
 - Task 3: Set the appropriate enviornment variables
 - Task 4: Run the automation script
 - Task 5: Validate the corresponding API calls to Terraform Cloud.
+- Task 6: Update the Terraform code version of your Workspace
+- Task 7: Review Workspace API
 
 ## Task 1: Clone the terraform-guides repository
 The [terraform-guides](https://github.com/hashicorp/terraform-guides) repository contains sample Terraform configurations, Sentinel policies, and automation scripts that can be used with Terraform Enterprise.
@@ -40,14 +42,21 @@ Edit the `loadandRunWorkspace.sh` replacing `python` with `python3` as that is w
 
 ## Task 5: Validate the corresponding API calls to Terraform Cloud.
 
-Validate that the automation script creates a workspace and performs an Terraform run.
+Validate that the automation script creates a workspace, performs an Terraform run and outputs the terraform plan summary.  Open up the `run.log` to review the items executed by the series of TFC API calls performed by the script.
 
 ## Task 6: Update the Terraform code version of your Workspace
-1. Update the `"terraform-version": "0.13.6"` to a new terraform version in the  `workspace.template.json` template file.  This template is used to generate a `workspace.json` which is used when creating the workspace.
+1. Update the `"terraform-version": "0.13.6"` within the shell script to a new terraform version.  This version is saved by the script to a `workspace.template.json` file which is used to generate a `workspace.json` payload used by Terraform Cloud API syntax.
 
-This file provides the payload for the API call for creating a workspace.  If you wish to add or modify the settings that are included in the @workspace.json payload, add them to workspace.template.json inside the script and be sure to check the Terraform Enterprise API syntax.
+2. Run `./loadAndRunWorkspace.sh "" myWorkspace` to create a new workspace with the updated terraform version.
 
-1. Rerun `./loadAndRunWorkspace.sh` to update the terraform version of your workspace.
+
+## Task 7: Review Workspace API
+Execute an API call to return the workspaces details for any given workspace:
+
+```
+curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" "https://app.terraform.io/api/v2/organizations/$TFE_ORG/workspaces/workspace-from-api" | jq
+```
 
 ## Reference
-For full documentation on this script refer to the script [README.md](https://github.com/hashicorp/terraform-guides/blob/master/operations/automation-script/README.md)
+- For full documentation on this script refer to the script [README.md](https://github.com/hashicorp/terraform-guides/blob/master/operations/automation-script/README.md)
+- [Terraform Cloud API Documentation](https://www.terraform.io/docs/cloud/api/index.html)

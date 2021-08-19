@@ -70,12 +70,7 @@ EOF
 }
 ```
 
-Set credentials for the AWS provider in your workspace.
-
-```text
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-```
+Execute the Terraform configuration:
 
 ```bash
 cd sentinel-test
@@ -124,10 +119,10 @@ import "tfplan/v2" as tfplan
 
 A Sentinel policy can include imports which enable a policy to access reusable libraries, external data and functions. Terraform Cloud provides four built-in imports that can be used for a policy check:
 
-__tfplan__ provides access to Terraform plan details which represent the changes Terraform will make to reach desired state
-__tfconfig__ provides access to Terraform configuration that is being used to describe the desired states
-__tfstate__ provides access to Terraform state, which represents what Terraform knows about the real world resources
-__tfrun__ provides access to information about a run
+* __tfplan__ provides access to Terraform plan details which represent the changes Terraform will make to reach desired state
+* __tfconfig__ provides access to Terraform configuration that is being used to describe the desired states
+* __tfstate__ provides access to Terraform state, which represents what Terraform knows about the real world resources
+* __tfrun__ provides access to information about a run
 
 _Note:_ Some imports can have a v2 suffix which indicates they represent the new data structures used post Terraform 0.12
 
@@ -144,10 +139,10 @@ Here is what is happening:
 
 - __tfplan__ is a frequently used import in policies since it provides details about planned changes. Later in this lab we will go over how you can determine what information is available to your policy from the import.
 - __tfplan.resource_changes__ is a collection with the resource address as the key and a resource change object as the value.
-- We are iterating over each of the resource change objects in the collection and using the filter function to filter out change objects whose type is aws_s3_bucket.
+- We are iterating over each of the resource change objects in the collection and using the filter function to filter out change objects whose type is `aws_s3_bucket`.
 - The type name matches the resource block we would define in a .tf file to manage S3 buckets.
 
-A policy can be broken down into a set of rules. Breaking down a policy into rules can make it more understandable and aids with testing. Lets create our first rule which enforces that required tags are provided. Add the following block under the commented line # Rule to require "department" and "environment" tags
+A policy can be broken down into a set of rules. Breaking down a policy into rules can make it more understandable and aids with testing. Lets create our first rule which enforces that required tags are provided. Add the following block under the commented line `# Rule to require "department" and "environment" tags`
 
 ```ruby
 required_tags = ["department", "environment"]
@@ -240,17 +235,13 @@ Sentinel imports are structured as a series of collections with a number of attr
 
 Due to the highly variable structure of data that can be produced by an individual Terraform configuration, Terraform Cloud and Enterprise provide the ability to generate mock data from existing configurations. This can be used to create sample data for testing new policies, or data to reproduce issues in an existing one.
 
-Mock data can be easily generated using the Terraform Cloud UI or the API after a plan has executed.
-
-Download the Mocks
-
-Take a moment to explore them by opening the `workspace/sentinel/mocks` folder.
+Mock data can be easily generated using the Terraform Cloud UI or the API after a plan has executed. Download the Mocks from a recent run in the Terraform Cloud workspace and copy them to the `/sentinel/mocks` folder.
 
 Can you find the resource_changes attribute from the mock file that would supply the tfplan/v2 import? If yes, can you tell what the S3 bucket's ACL will be after the update?
 
 For Sentinel to use to use mocks, the CLI must be provided with a configuration file. This can be specified using the -config=path flag. 
 
-Create a sentinel-mocks.hcl file with the following code at `sentinel/sentinel-mocks.hcl`
+Create a `sentinel-mocks.hcl` file with the following code at `/sentinel/sentinel-mocks.hcl`
 
 `sentinel-mocks.hcl`
 ```hcl
@@ -317,14 +308,14 @@ mock "tfrun" {
 
 ```bash
 cd /root/workspace/sentinel
-sentinel apply -config=sentinel-mocks.hcl restrict-s3-buckets.sentinel
+c
 ```
 
 You should see a failure message indicating the main rule failed as well as the nested rule that resulted in the failure.
 
 Note: Sentinel uses lazy evaluation, since the first rule evaluated to false, the 2nd one was not evaluated fully because Sentinel knows the policy has already failed.
 
-Let's add some logging to our policy so it becomes clearer what is causing the failures. Open the policy file, restrict-s3-buckets.sentinel, in the Code Editor tab and add the following block right before the main rule
+Let's add some logging to our policy so it becomes clearer what is causing the failures. Open the policy file, `restrict-s3-buckets.sentinel`, in the Code Editor tab and add the following block right before the main rule
 
 ```ruby
 # Before the main rule!
@@ -341,7 +332,7 @@ Run sentinel apply with the correct params once again, this time you should see 
 
 While running apply is helpful to validate a policy, Sentinel comes with a built-in test framework to validate a policy behaves as expected for a number of cases.
 
-Sentinel is opinionated about the folder structure required for tests. This opinionated structure allows testing to be as simple as running sentinel test with no arguments. Additionally, it becomes simple to test with a CI system or add new policies.The structure Sentinel expects is test/<policy>/<test_name>.[hcl|json] where <policy> is the name of your policy file without the file extension.
+Sentinel is opinionated about the folder structure required for tests. This opinionated structure allows testing to be as simple as running sentinel test with no arguments. Additionally, it becomes simple to test with a CI system or add new policies.The structure Sentinel expects is `test/<policy>/<test_name>.[hcl|json` where <policy> is the name of your policy file without the file extension.
 
 Within that folder should be a list of HCL or JSON files. Each file represents a single test case.
 
@@ -355,16 +346,16 @@ For the fail scenario we expect policy to fail, thus the main rule should evalua
 
 We already have the data for the failure scenario from our mock export, we need to create the mock data used by the pass scenario. To do this we will copy the existing mock we downloaded from TFC and update the values we are testing for.
 
-Note that the copied mock file's name should correspond with the source we have defined in the test scenario file pass.hcl
+Note that the copied mock file's name should correspond with the source we have defined in the test scenario file `pass.hcl`
 
 ```bash
 cd /root/workspace/sentinel/mocks/
 cp mock-tfplan-v2.sentinel mock-tfplan-v2-pass.sentinel
 ```
 
-Once copied open mock-tfplan-v2-pass.sentinel in the Code Editor. Make sure you open the file with pass in its name because this is the file we want to modify for our pass scenario.
+Once copied open `mock-tfplan-v2-pass.sentinel` in the Code Editor. Make sure you open the file with pass in its name because this is the file we want to modify for our pass scenario.
 
-You will need to make 2 changes in mock-tfplan-v2-pass.sentinel, one for each of our failing rules. Please make sure you update the correct nested attribute!
+You will need to make 2 changes in `mock-tfplan-v2-pass.sentinel`, one for each of our failing rules. Please make sure you update the correct nested attribute!
 
 resource_changes > aws_s3_bucket.dev > change > after > acl, change this value to private
 resource_changes > aws_s3_bucket.dev > change > after > tags, add the second required tag department and any value
@@ -467,3 +458,8 @@ Your run should fail once it hits the Organization policy check which is expecte
 Congratulations!! You have just created your first sentinel policy and used policy-as-code to prevent non-compliant infrastructure from being created.
 
 If you would like to confirm your policy allows configuration that comply you can fix your terraform config in /root/workspace/tf-config/main.tf and run terraform apply again.
+
+
+## Resources
+- [Enforce Policy with Sentinel - Learn Tracks](https://learn.hashicorp.com/collections/terraform/policy)
+- [Experiment in the Sentinel Playground](https://play.sentinelproject.io/)
